@@ -5,8 +5,7 @@ import Button from "@mui/material/Button";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import supabase from "../utils/supabaseClient";
-// import { signInWithEmailAndPassword } from "@firebase/auth";
-// import { authHandle } from "../firebase/client";
+import Logo from "../components/Logo";
 
 const SignIn = () => {
   const validationSchema = yup.object({
@@ -63,10 +62,7 @@ const SignIn = () => {
         minHeight: "70vh",
       }}
     >
-      <Box sx={{display: "flex", flexDirection: "column", alignItems: "flex-end"}}>
-        <Typography variant="h2" color="primary" sx={{ fontWeight: "bold", textShadow: " 2px 1px 2px grey" }}>AuctionR</Typography>
-        <Typography variant="caption" color="secondary" >Auctions, Simplified.</Typography>
-      </Box>
+      <Logo/>
       <Box sx={{
         display: "flex",
         justifyContent: "center",
