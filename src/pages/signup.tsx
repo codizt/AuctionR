@@ -21,7 +21,7 @@ const Signup = () => {
         <Typography
           variant="h4"
           color="primary"
-          sx={{ fontWeight: "bold", display: "flex", justifyContent: "center" }}
+          sx={{ fontWeight: "bold", display: "flex", justifyContent: "center", mb: "1rem" }}
         >
           Register as
         </Typography>

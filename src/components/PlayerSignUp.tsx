@@ -6,16 +6,17 @@ import { useState, useEffect } from "react"
 
 const PlayerSignUp = () => {
   const [emailInUse, setEmailInUse] = useState(false);
-  const [usernameInUse, setUsernameInUse] = useState(false);
+  const [sports, setSports] = useState([]);
 
   const validationSchema = yup.object({
-    name: yup.string().required("Username is required"),
+    fname: yup.string().required("First name is required"),
+    lname: yup.string().required("Last name is required"),
     email: yup
       .string()
       .email("Invalid email")
       .required("Email is required"),
     desc: yup.string().required("Description is required"),
-    org: yup.string().required("Organization is required"),
+    sid: yup.string().required("Sport ID is required"),
     password: yup
       .string()
       .required("Password is required")
@@ -31,10 +32,11 @@ const PlayerSignUp = () => {
 
   const formik = useFormik({
     initialValues: {
-      name: "",
+      fname: "",
+      lname: "",
       email: "",
       desc: "",
-      org: "",
+      sid: "",
       password: "",
       passwordConfirmation: "",
     },
@@ -71,38 +73,25 @@ const PlayerSignUp = () => {
   });
 
   useEffect(() => {
-    // (async () => {
-    //   const usersRef = collection(storeHandle, "users");
-    //   const q = query(usersRef, where("email", "==", formik.values.email));
-    //   const querySnapshot = await getDocs(q);
-    //   const data = [];
-    //   querySnapshot.forEach((doc) => {
-    //     data.push(doc.data);
-    //   });
-    //   if (data.length !== 0) {
-    //     setEmailInUse(true);
-    //   } else {
-    //     setEmailInUse(false);
-    //   }
-    // })();
-  }, [formik.values.email]);
+    (async () => {
+      const {data, error } = await supabase.from('sports').select('name');
+    if (data) { 
+      setSports(data);
+    }
+    console.log("Sports: ", data);
+    })()
+    
+  }, [])
 
   useEffect(() => {
-    // (async () => {
-    //   const usersRef = collection(storeHandle, "users");
-    //   const q = query(usersRef, where("name", "==", formik.values.name));
-    //   const querySnapshot = await getDocs(q);
-    //   const data = [];
-    //   querySnapshot.forEach((doc) => {
-    //     data.push(doc.data);
-    //   });
-    //   if (data.length !== 0) {
-    //     setUsernameInUse(true);
-    //   } else {
-    //     setUsernameInUse(false);
-    //   }
-    // })();
-  }, [formik.values.name]);
+    (async () => {
+      const { data, error } = await supabase.from('users').select('email').eq('email', formik.values.email);
+      console.log(data);
+      if (data?.length > 0) {
+        setEmailInUse(true);
+      }
+    })()
+  }, [formik.values.email]);
 
   return (
     <Box
@@ -131,21 +120,32 @@ const PlayerSignUp = () => {
           }}
         >
           <TextField
-            id="name"
-            name="name"
-            label="Username"
+            id="fname"
+            name="fname"
+            label="First name"
             variant="outlined"
-            value={formik.values.name}
+            value={formik.values.fname}
             onChange={formik.handleChange}
-            error={formik.touched.name && Boolean(formik.errors.name)}
-            helperText={formik.touched.name && formik.errors.name}
+            error={formik.touched.fname && Boolean(formik.errors.fname)}
+            helperText={formik.touched.fname && formik.errors.fname}
             onBlur={formik.handleBlur}
             sx={{ m: "1rem", maxWidth: "29rem" }}
             fullWidth
           />
-          {usernameInUse ? (
-            <Typography variant="caption">Username already taken</Typography>
-          ) : null}
+          <TextField
+            id="lname"
+            name="lname"
+            label="Last name"
+            variant="outlined"
+            value={formik.values.lname}
+            onChange={formik.handleChange}
+            error={formik.touched.lname && Boolean(formik.errors.lname)}
+            helperText={formik.touched.lname && formik.errors.lname}
+            onBlur={formik.handleBlur}
+            sx={{ m: "1rem", maxWidth: "29rem" }}
+            fullWidth
+          />
+          
           <TextField
             id="email"
             name="email"
@@ -177,14 +177,14 @@ const PlayerSignUp = () => {
             multiline
           />
           <TextField
-            id="org"
-            name="org"
-            label="Organization"
+            id="sid"
+            name="sid"
+            label="Sport ID"
             variant="outlined"
-            value={formik.values.org}
+            value={formik.values.sid}
             onChange={formik.handleChange}
-            error={formik.touched.org && Boolean(formik.errors.org)}
-            helperText={formik.touched.org && formik.errors.org}
+            error={formik.touched.sid && Boolean(formik.errors.sid)}
+            helperText={formik.touched.sid && formik.errors.sid}
             onBlur={formik.handleBlur}
             sx={{ m: "1rem", maxWidth: "29rem" }}
             fullWidth
